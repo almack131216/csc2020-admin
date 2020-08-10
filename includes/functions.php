@@ -86,10 +86,7 @@ function createRandomPassword() {
 ////////////////////////// 	 IMAGE DIRECTORIES    //////////
 //echo '<br/>(FB): (functions) SITEROOT:'.$siteroot.$gp_uploadPath;
 
-$missingimage			= "_missingimage.jpg";
-$missingthumb			= $siteroot.$gp_uploadPath['thumbs'].$missingimage;
-$missingprimary			= $siteroot.$gp_uploadPath['primary'].$missingimage;
-$missinglarge			= $siteroot.$gp_uploadPath['large'].$missingimage;
+$missingimage = "_missingimage.jpg";
 
 if(empty($amactive)){
 	global $amactiveDefault;

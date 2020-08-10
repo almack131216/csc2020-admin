@@ -301,7 +301,7 @@ if(notloggedin()) {
 					$my_price		= $ret_array['price'];
 					$my_price_details = $ret_array['price_details'];
 					
-					$my_image_primary 	= $siteroot.$gp_uploadPath['primary'].$ret_array['image_large'];
+					$my_image_primary 	= setImgDir($my_id,'primary').$ret_array['image_large'];
 					$filename	 	= $ret_array['image_large'];
 					
 					if($CMSShared->IsImage($filename)){

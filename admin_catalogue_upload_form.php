@@ -76,7 +76,7 @@
 						}else{
 							$FilePanel .= ' class="thumb_selected">';
 						}
-						// if(!$suid && gp_enabled("ThinUpload")) $FileReplace = '<div align="center">'.$CMSAddOns->Thickbox("fileReplace","file_selectfile.php?editid=".$editid,"Replace file","").'</div>';
+						if(!$suid && gp_enabled("ThinUpload")) $FileReplace = '<div align="center">'.$CMSAddOns->Thickbox("fileReplace","file_selectfile.php?editid=".$editid,"Replace file","").'</div>';
 					}
 					
 					$FilePanel .= '<a href="admin_catalogue_upload.php?editid='.$more_my_id.'">';
@@ -192,7 +192,7 @@
 				$BuildForm.= '<div class="inner_right">';
 					$BuildForm.= '<input type="file" name="upload_thumb" id="thumb_upload" />';
 					if($CMSShared->FileExists($my_CustomThumb)){
-						$ThumbPath = $gp_uploadPath['thumbs'].$my_CustomThumb_filename;
+						$ThumbPath = setImgDir($my_id,'thumbs').$my_CustomThumb_filename;
 						$BuildForm.= '<div id="CustomThumb">';
 							$BuildForm.= '<img src="'.$my_CustomThumb.'">';
 							$BuildForm.= '<a href="javascript:removeImage(\'CustomThumb\',\''.$my_id.'\',\''.$ThumbPath.'\')" title="Remove this Custom Thumbnail image?"><img src="includes/btns/generic_delete_sm.gif"></a>';

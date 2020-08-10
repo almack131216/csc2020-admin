@@ -55,7 +55,7 @@
 			/*global $my_image_withpath, $filename;*/
 			global $width_new, $height_new, $width_orig, $height_orig;
 			global $my_image_thumb, $my_image_primary, $my_image_highres;
-			global $siteroot,$gp_uploadPath;
+			global $siteroot;
 			global $CMSMakeImages,$CMSShared;
 			
 			$tmp = @getimagesize($my_image_withpath);
@@ -95,12 +95,7 @@
 			
 			
 			$type = $CMSShared->GetFileType($filename);
-			
-			
-			// $loc_thumbs = $siteroot.$gp_uploadPath['thumbs'];
-			// $loc_primary = $siteroot.$gp_uploadPath['primary'];
-			// $loc_highres = $siteroot.$gp_uploadPath['highres'];
-			// $loc_large = $siteroot.$gp_uploadPath['large'];
+
 			// $loc_highres = setImgDir($ParentID,'highres');
 			$loc_large = setImgDir($ParentID,'large');
 			$loc_primary = setImgDir($ParentID,'primary');
@@ -151,8 +146,7 @@
 		////////////////////////////////////////////////////////////
 		////////////////////////// 	 MAKE THUMBNAIL IMAGE  /////////
 		function ThumbMe($ParentID, $format, $image_name, $width_new, $height_new, $quality, $size){
-			global $siteroot,$gp_uploadPath;
-			global $CMSMakeImages;
+			global $siteroot,$CMSMakeImages;
 			
 			// $loc_highres = setImgDir($ParentID,'highres');
 			$loc_large = setImgDir($ParentID,'large');

@@ -60,9 +60,9 @@ if(notloggedin()) {
 			$ret_array		= mysql_fetch_array($item_result);				
 			$my_id			= $ret_array['id'];
 			
-			$my_image		 	= $siteroot.$gp_uploadPath['thumbs'].$ret_array['image_large'];
-			$my_image_large 	= $siteroot.$gp_uploadPath['large'].$ret_array['image_large'];
-			$my_image_thumb 	= $siteroot.$gp_uploadPath['thumbs'].$ret_array['image_large'];
+			$my_image		 	= setImgDir($my_id,'thumbs').$ret_array['image_large'];
+			$my_image_large 	= setImgDir($my_id,'large').$ret_array['image_large'];
+			$my_image_thumb 	= setImgDir($my_id,'thumbs').$ret_array['image_large'];
 			$my_filename		= $ret_array['image_large'];										
 
 			
@@ -70,7 +70,7 @@ if(notloggedin()) {
 			
 			echo '<tr class="body_general" bgcolor='.$rowcolor.'>';					
 			
-			// (just image) echo '<td align="center" valign="middle"><img src="' . $siteroot.$gp_uploadPath['thumbs'] . $ret_array['image_large'] .'"></td>';
+			// (just image) echo '<td align="center" valign="middle"><img src="' . setImgDir($my_id,'thumbs') . $ret_array['image_large'] .'"></td>';
 			echo '<td align="center">';
 			echo $CMSImages->GetThumb($my_image_large, $my_image_thumb, $my_filename, "true");
 			echo '</td>';

@@ -212,9 +212,9 @@ if( notloggedin() ) {
 			$my_date			= $CMSTextFormat->FormatDate($my_date,"cms");
 			
 			$filename			= $itemArray[$tmpcount]['image_large'];
-			$my_image_large		= $siteroot.$gp_uploadPath['large'].$filename;
-			$my_image_primary	= $siteroot.$gp_uploadPath['primary'].$filename;
-			$my_image_thumb		= $siteroot.$gp_uploadPath['thumbs'].$filename;
+			$my_image_large		= setImgDir($my_id,'large').$filename;
+			$my_image_primary	= setImgDir($my_id,'primary').$filename;
+			$my_image_thumb		= setImgDir($my_id,'thumbs').$filename;
 			
 				
 			// PRINT TABLE HEADERS

@@ -23,11 +23,12 @@ if (!empty($_REQUEST['uid'])) {
 		$my_cat		= $ret_array['category'];
 		$my_subcat	= $ret_array['subcategory'];
 		
-		$my_image_highres	= $siteroot.$gp_uploadPath['highres'].$ret_array['image_large'];
-		$my_image_large		= $siteroot.$gp_uploadPath['large'].$ret_array['image_large'];
-		$my_image_primary	= $siteroot.$gp_uploadPath['primary'].$ret_array['image_large'];
-		$my_image_thumb		= $siteroot.$gp_uploadPath['thumbs'].$ret_array['image_large'];
-		$my_filename		= $ret_array['image_large'];		
+		// $my_image_highres	= setImgDir($ParentID,'highres').$ret_array['image_large'];
+		$my_image_large		= setImgDir($ParentID,'large').$ret_array['image_large'];
+		$my_image_primary	= setImgDir($ParentID,'primary').$ret_array['image_large'];
+		$my_image_thumb		= setImgDir($ParentID,'thumbs').$ret_array['image_large'];
+		$my_filename		= $ret_array['image_large'];	
+		//echo '<br>$my_image_large: '.$my_image_large;
 	}
 	
 	$tmpCatalogueData = $PageBuild->GetCatalogueData(0,0,$ParentID);	

@@ -4,13 +4,13 @@
 		
 		function DeleteItem($getAttributes){
 			global $db_clientTable_catalogue,$CMSShared,$CMSDebug;
-			global $db,$db_client,$siteroot,$gp_uploadPath;
+			global $db,$db_client,$siteroot;
 			
-			$getItemID = $getAttributes['itemID'];
+			$getItemId = $getAttributes['itemID'];
 			$getFileOnly = $getAttributes['fileOnly'];
 				
-			$more_query = "SELECT * FROM $db_clientTable_catalogue WHERE id=$getItemID";
-			if(!$getFileOnly) $more_query .=" OR id_xtra=$getItemID";
+			$more_query = "SELECT * FROM $db_clientTable_catalogue WHERE id=$getItemId";
+			if(!$getFileOnly) $more_query .=" OR id_xtra=$getItemId";
 			$more_result = mysql_query($more_query);			
 			
 			if($more_result && mysql_num_rows($more_result)>=1) { // if 1									
@@ -21,6 +21,8 @@
 					$more_file		= $more_array['image_large'];
 					$more_file_small	= $more_array['image_small'];							
 
+					$getParentID = $more_id_xtra ? $more_id_xtra : $more_id;
+
 					// DELETE ITEM FROM DATABASE
 					if($getFileOnly){
 						$more_delete_query = "UPDATE $db_clientTable_catalogue SET image_large='' WHERE id=$more_id LIMIT 1";//, image_small=''
@@ -30,24 +32,23 @@
 					$more_delete_result = $db->mysql_query_log($more_delete_query);
 					
 					// DELETE FILES ATTACHED					
-					$more_image_thumb 	= $siteroot.$gp_uploadPath['thumbs'].$more_file;
-					$more_image 		= $siteroot.$gp_uploadPath['primary'].$more_file;
-					$more_image_large 	= $siteroot.$gp_uploadPath['large'].$more_file;
-					$more_image_highres = $siteroot.$gp_uploadPath['highres'].$more_file;
-					$more_CustomThumb = $siteroot.$gp_uploadPath['thumbs'].$more_file_small;
+					$more_image_thumb 	= setImgDir($getParentID,'thumbs').$more_file;
+					$more_image 		= setImgDir($getParentID,'primary').$more_file;
+					$more_image_large 	= setImgDir($getParentID,'large').$more_file;
+					// $more_image_highres = setImgDir($getParentID,'highres').$more_file;
+					$more_CustomThumb = setImgDir($getParentID,'thumbs').$more_file_small;
 					
-					//echo 'MORE_ID: '.$getItemID;
-					if($CMSShared->FileExists($more_image_highres))	$CMSDebug->FileUnlink($more_image_highres);				
+					//echo 'MORE_ID: '.$getParentID;
+					// if($CMSShared->FileExists($more_image_highres))	$CMSDebug->FileUnlink($more_image_highres);				
 					if($CMSShared->FileExists($more_image_large))	$CMSDebug->FileUnlink($more_image_large);
 					if($CMSShared->FileExists($more_image_thumb))	$CMSDebug->FileUnlink($more_image_thumb);
 					if($CMSShared->FileExists($more_image))			$CMSDebug->FileUnlink($more_image);
 					if($CMSShared->FileExists($more_CustomThumb))	$CMSDebug->FileUnlink($more_CustomThumb);
-					
 				} // END FOR LOOP 1
 			} // END if 1
 			
 			if(!$getFileOnly){
-				$RelatedQuery = "DELETE FROM $db_client.tbl_related_subcats WHERE itemID=$getItemID OR itemID2=$getItemID";
+				$RelatedQuery = "DELETE FROM $db_client.tbl_related_subcats WHERE itemID=$getParentID OR itemID2=$getParentID";
 				$RelatedResult = $db->mysql_query_log($RelatedQuery);
 			}
 			return true;
@@ -60,7 +61,7 @@
 			global $db_clientTable_members;
 			global $db,$db_client;
 			
-			$getItemID = $getID;
+			$getParentID = $getID;
 			
 			// DELETE ITEM FROM DATABASE
 			$deleteQuery = "DELETE from $db_clientTable_members WHERE Id=$getItemID LIMIT 1";
