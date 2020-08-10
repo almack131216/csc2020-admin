@@ -96,12 +96,12 @@
 			global $my_image_thumb, $missingthumb;
 			global $my_image_large, $missinglarge;
 			global $adminroot,$siteroot,$gp_uploadPath;
-			global $CMSShared;
+			global $CMSShared,$ParentID;
 			
 			switch($ret_imagesize){
 				case "thumb":
 					if($CMSShared->IsImage($ret_filename)){
-						if (!(@fclose(@fopen($ret_imagepath, "r"))) || $ret_imagepath == $siteroot.$gp_uploadPath['thumbs']) {				
+						if (!(@fclose(@fopen($ret_imagepath, "r"))) || $ret_imagepath == setImgDir($ParentID,'thumbs')) {				
 							return $missingthumb;
 					    }else{
 						    return $my_image_thumb;

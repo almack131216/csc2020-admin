@@ -32,7 +32,7 @@
 		
 		////////////////////////////////////////////////////////////
 		/////// ADMIN   ////////// 	MAKE THUMBNAIL SIZES   /////////
-		function MakeImage($my_image_withpath, $filename, $size) {
+		function MakeImage($ParentID,$my_image_withpath, $filename, $size) {
 			global $gp_highres_width, $gp_highres_height, $gp_highres_quality;
 			global $gp_large_width, $gp_large_height, $gp_large_quality;
 			global $gp_primary_width, $gp_primary_height, $gp_primary_quality;
@@ -40,20 +40,21 @@
 			global $CMSMakeImages;
 			
 			if($size == "thumb"){
-				$CMSMakeImages->ImageScale($my_image_withpath, $filename, $gp_thumb_width, "pixels", "width", $gp_thumb_quality, $size);
+				$CMSMakeImages->ImageScale($ParentID, $my_image_withpath, $filename, $gp_thumb_width, "pixels", "width", $gp_thumb_quality, $size);
 			}else if ($size == "primary") {
-				$CMSMakeImages->ImageScale($my_image_withpath, $filename, $gp_primary_width, "pixels", "width", $gp_primary_quality, $size);
+				$CMSMakeImages->ImageScale($ParentID, $my_image_withpath, $filename, $gp_primary_width, "pixels", "width", $gp_primary_quality, $size);
 			}else if ($size == "large") {
-				$CMSMakeImages->ImageScale($my_image_withpath, $filename, $gp_large_width, "pixels", "width", $gp_large_quality, $size);
-			}else if ($size == "highres") {
-				$CMSMakeImages->ImageScale($my_image_withpath, $filename, $gp_highres_width, "pixels", "width", $gp_highres_quality, $size);		
+				$CMSMakeImages->ImageScale($ParentID, $my_image_withpath, $filename, $gp_large_width, "pixels", "width", $gp_large_quality, $size);
+			// }else if ($size == "highres") {
+			// 	$CMSMakeImages->ImageScale($ParentID, $my_image_withpath, $filename, $gp_highres_width, "pixels", "width", $gp_highres_quality, $size);		
 			}			
 		}
 		
 		//////////// FUNCTION: scale images in table
-		function ImageScale($my_image_withpath, $filename, $value, $factor, $scaleby, $quality, $size) {
+		function ImageScale($ParentID, $my_image_withpath, $filename, $value, $factor, $scaleby, $quality, $size) {
 			/*global $my_image_withpath, $filename;*/
-			global $width_new, $height_new, $width_orig, $height_orig, $my_image_thumb, $my_image_primary, $my_image_highres;
+			global $width_new, $height_new, $width_orig, $height_orig;
+			global $my_image_thumb, $my_image_primary, $my_image_highres;
 			global $siteroot,$gp_uploadPath;
 			global $CMSMakeImages,$CMSShared;
 			
@@ -96,47 +97,51 @@
 			$type = $CMSShared->GetFileType($filename);
 			
 			
-			$loc_thumbs = $siteroot.$gp_uploadPath['thumbs'];
-			$loc_primary = $siteroot.$gp_uploadPath['primary'];
-			$loc_highres = $siteroot.$gp_uploadPath['highres'];
-			$loc_large = $siteroot.$gp_uploadPath['large'];	
+			// $loc_thumbs = $siteroot.$gp_uploadPath['thumbs'];
+			// $loc_primary = $siteroot.$gp_uploadPath['primary'];
+			// $loc_highres = $siteroot.$gp_uploadPath['highres'];
+			// $loc_large = $siteroot.$gp_uploadPath['large'];
+			// $loc_highres = setImgDir($ParentID,'highres');
+			$loc_large = setImgDir($ParentID,'large');
+			$loc_primary = setImgDir($ParentID,'primary');
+			$loc_thumbs = setImgDir($ParentID,'thumbs');
 			
 			if ($quality != 100){		
 				
 				if ($type != "gif" ) {
 					
 					if ( $type=="jpeg" || $type=="jpg" ) {
-						$CMSMakeImages->ThumbMe("jpg", $filename, $width_new, $height_new, $quality, $size);					
+						$CMSMakeImages->ThumbMe($ParentID, "jpg", $filename, $width_new, $height_new, $quality, $size);					
 					} elseif($type="png" || $type="PNG") {
-						$CMSMakeImages->ThumbMe("png", $filename, $width_new, $height_new, $quality, $size);
+						$CMSMakeImages->ThumbMe($ParentID, "png", $filename, $width_new, $height_new, $quality, $size);
 					}
 					if($size == "thumb"){
 						$my_image_thumb = $loc_thumbs.$filename;
 					}elseif($size == "primary"){
 						$my_image_primary = $loc_primary.$filename;
-					}elseif($size == "highres"){
-						$my_image_highres = $loc_highres.$filename;
+					// }elseif($size == "highres"){
+					// 	$my_image_highres = $loc_highres.$filename;
 					}
 					
 				} else {
-					$CMSMakeImages->ThumbMe("gif", $filename, $width_new, $height_new, $quality, $size);
+					$CMSMakeImages->ThumbMe($ParentID, "gif", $filename, $width_new, $height_new, $quality, $size);
 					if($size == "thumb"){
 						$my_image_thumb = $loc_thumbs.$filename;
 					}elseif($size == "primary"){
 						$my_image_primary = $loc_primary.$filename;
-					}elseif($size == "highres"){
-						$my_image_highres = $loc_highres.$filename;
+					// }elseif($size == "highres"){
+					// 	$my_image_highres = $loc_highres.$filename;
 					}			
 				}		
 					
 			} else {
-				$CMSMakeImages->ThumbMe("gif", $filename, $width_new, $height_new, $quality, $size);
+				$CMSMakeImages->ThumbMe($ParentID, "gif", $filename, $width_new, $height_new, $quality, $size);
 				if($size == "thumb"){
 					$my_image_thumb = $loc_thumbs.$filename;
 				}elseif($size == "primary"){
 					$my_image_primary = $loc_primary.$filename;
-				}elseif($size == "highres"){
-					$my_image_highres = $loc_highres.$filename;
+				// }elseif($size == "highres"){
+				// 	$my_image_highres = $loc_highres.$filename;
 				}	
 			}
 			
@@ -145,21 +150,21 @@
 		
 		////////////////////////////////////////////////////////////
 		////////////////////////// 	 MAKE THUMBNAIL IMAGE  /////////
-		function ThumbMe($format, $image_name, $width_new, $height_new, $quality, $size){
+		function ThumbMe($ParentID, $format, $image_name, $width_new, $height_new, $quality, $size){
 			global $siteroot,$gp_uploadPath;
 			global $CMSMakeImages;
 			
-			$loc_highres = $siteroot.$gp_uploadPath['highres'];
-			$loc_large = $siteroot.$gp_uploadPath['large'];
-			$loc_primary = $siteroot.$gp_uploadPath['primary'];
-			$loc_thumbs = $siteroot.$gp_uploadPath['thumbs'];
+			// $loc_highres = setImgDir($ParentID,'highres');
+			$loc_large = setImgDir($ParentID,'large');
+			$loc_primary = setImgDir($ParentID,'primary');
+			$loc_thumbs = setImgDir($ParentID,'thumbs');
 			
 			if($size == "thumb"){
 				$loc_dynamic = $loc_thumbs;
 			}elseif($size == "primary"){
 				$loc_dynamic = $loc_primary;
-			}elseif($size == "highres"){
-				$loc_dynamic = $loc_highres;
+			// }elseif($size == "highres"){
+			// 	$loc_dynamic = $loc_highres;
 			}else{
 				$loc_dynamic = $loc_large;
 			}

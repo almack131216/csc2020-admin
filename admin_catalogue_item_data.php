@@ -61,12 +61,12 @@
 			$my_CustomThumb_withpath = '';
 			$my_CustomThumb_filename = '';
 		}
-		
-		$my_image_highres		= $siteroot.$gp_uploadPath['highres'].$edit_arr['image_large'];
-		$my_image_large			= $siteroot.$gp_uploadPath['large'].$edit_arr['image_large'];
-		$my_image_primary		= $siteroot.$gp_uploadPath['primary'].$edit_arr['image_large'];
-		$my_image_thumb			= $siteroot.$gp_uploadPath['thumbs'].$edit_arr['image_large'];
-		if($HasCustomThumb) $my_CustomThumb = $siteroot.$gp_uploadPath['thumbs'].$edit_arr['image_small'];
+		// echo '<br>item_data: edit ID: '.$ParentID;
+		// $my_image_highres		= $siteroot.$gp_uploadPath['highres'].$edit_arr['image_large'];
+		$my_image_large			= setImgDir($ParentID,'large').$edit_arr['image_large'];
+		$my_image_primary		= setImgDir($ParentID,'primary').$edit_arr['image_large'];
+		$my_image_thumb			= setImgDir($ParentID,'thumbs').$edit_arr['image_large'];
+		if($HasCustomThumb) $my_CustomThumb = setImgDir($ParentID,'thumbs').$edit_arr['image_small'];
 		
 		$my_largeimage_withpath	= $my_image_large;
 		if($HasCustomThumb) $my_CustomThumb_withpath = $my_CustomThumb;
@@ -109,7 +109,7 @@
 		$my_month_spare = '00';
 		$my_year_spare = '0000';	
 		
-		$my_image_highres		= '';
+		// $my_image_highres		= '';
 		$my_image_large			= '';
 		$my_image_primary		= '';
 		$my_image_thumb			= '';

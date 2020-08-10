@@ -263,4 +263,15 @@ function show_contact_admin() {
 	echo '<a href="'.$adminroot.'help_request.php" title="Send Support Request">contact CMS Support</a>';
 }
 
+function setImgDir($getId,$getSize){
+	global $siteroot,$gp_uploadPath;
+	// $getId = 47570;
+	$imgDir = $siteroot.$gp_uploadPath[$getSize];
+	if($getId>=47570){
+		$imgDir = $siteroot.'images/'.$getId.'/'.$getSize.'/';
+		if(!is_dir ( $imgDir )) mkdir($imgDir, 0755, true);
+	}
+	return $imgDir;
+}
+
 ?>

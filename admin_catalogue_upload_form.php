@@ -50,8 +50,8 @@
 					$more_my_id			= $more_array['id'];
 					//$more_my_cat		= $more_array['category'];
 					$more_my_name		= $more_array['name'];
-					$my_image_large	= $siteroot.$gp_uploadPath['large'].$more_array['image_large'];
-					$my_image_thumb	= $siteroot.$gp_uploadPath['thumbs'].$more_array['image_large'];
+					$my_image_large	= setImgDir($ParentID,'large').$more_array['image_large'];
+					$my_image_thumb	= setImgDir($ParentID,'thumbs').$more_array['image_large'];
 					$more_filename		= $more_array['image_large'];
 					$TableID = $more_my_id;
 
@@ -76,7 +76,7 @@
 						}else{
 							$FilePanel .= ' class="thumb_selected">';
 						}
-						if(!$suid && gp_enabled("ThinUpload")) $FileReplace = '<div align="center">'.$CMSAddOns->Thickbox("fileReplace","file_selectfile.php?editid=".$editid,"Replace file","").'</div>';
+						// if(!$suid && gp_enabled("ThinUpload")) $FileReplace = '<div align="center">'.$CMSAddOns->Thickbox("fileReplace","file_selectfile.php?editid=".$editid,"Replace file","").'</div>';
 					}
 					
 					$FilePanel .= '<a href="admin_catalogue_upload.php?editid='.$more_my_id.'">';
@@ -118,7 +118,7 @@
 						$FilePanel .= $CMSImages->GetThumb($my_image_large, $my_image_thumb, $my_filename, "false");
 						if($CMSShared->FileExists($my_image_large)){							
 							$FilePanel .= '&nbsp;<a href="admin_catalogue_item_delete.php?uid='.$my_id.'&fileOnly=1&prevpage=item_edit" title="Remove this file from '.$CommonCustomWords['item'].'"><img src="includes/icons/icon_item_delete.gif" border="0"></a>';
-							if(!$suid && gp_enabled("ThinUpload")) $FilePanel .= $CMSAddOns->Thickbox("fileReplace","file_selectfile.php?editid=".$editid,"Replace file","");
+							// if(!$suid && gp_enabled("ThinUpload")) $FilePanel .= $CMSAddOns->Thickbox("fileReplace","file_selectfile.php?editid=".$editid,"Replace file","");
 						}else{
 							if(!$suid && gp_enabled("ThinUpload")) $FilePanel .= $CMSAddOns->Thickbox("fileSelect","file_selectfile.php?editid=".$editid,"Replace file","");
 						}

@@ -111,7 +111,7 @@ if( notloggedin() ) {
 	$catcheck_query		= "SELECT * FROM $db_clientTable_catalogue_cats";
 	$catcheck_result	= mysql_query($catcheck_query);
 	$catcheck_count		= mysql_num_rows($catcheck_result);
-	//echo '<br />(FB): '.$siteroot.$gp_uploadPath['large'];
+	//echo '<br />(FB): '.setImgDir('large');
 	if ($catcheck_count == 0) { // IF CATCHECK
 		echo '<p class="prompt">There are currently no categories listed in your database</p>';
 		if(gp_enabled("add_category")){
@@ -123,7 +123,8 @@ if( notloggedin() ) {
 		}
 	} else { // ELSE CATCHECK
 	
-		//echo '<br>(FB):EDIT ID (GET)= '.$editid;
+		echo '<br>(FB):PARENT ID (GET)= '.$ParentID;
+		echo '<br>(FB):EDIT ID (GET)= '.$editid;
 		/// END ///
 		
 		
@@ -333,7 +334,8 @@ if( notloggedin() ) {
 					//echo $query;
 					//exit();
 					$result = $db->mysql_query_log($query);
-					$uid = mysql_insert_id();					
+					$uid = mysql_insert_id();
+					if(!$ParentID) $ParentID = $uid;				
 				}
 								
 				if ($result) {
@@ -351,7 +353,7 @@ if( notloggedin() ) {
 						
 						$UploadThumb = $_FILES['upload_thumb']['tmp_name'];
 						$UploadFileName = "th_".$tmpName."_".$uid.".".$filetype;
-						$my_CustomThumb_withpath	= $siteroot.$gp_uploadPath['thumbs'].$UploadFileName;
+						$my_CustomThumb_withpath	= setImgDir($ParentID,'thumbs').$UploadFileName;
 						move_uploaded_file($UploadThumb,$my_CustomThumb_withpath);
 						
 						if($CMSShared->FileExists($my_CustomThumb) && $my_CustomThumb != $my_CustomThumb_withpath) unlink($my_CustomThumb);
@@ -406,8 +408,8 @@ if( notloggedin() ) {
 							$UploadFileName = $tmpName."_".$uid.".".$filetype;
 							
 							////////////// Move the file over
-							$my_largeimage_withpath	= $siteroot.$gp_uploadPath['large'].$UploadFileName;
-							$my_highresimage_withpath = $siteroot.$gp_uploadPath['highres'].$UploadFileName;				
+							$my_largeimage_withpath	= setImgDir($ParentID,'large').$UploadFileName;
+							// $my_highresimage_withpath = setImgDir($ParentID,'highres').$UploadFileName;				
 							//echo '<br />(FB)FROM: '.$UploadFile.'<br />';//SHOW PATHS WHEN UPLOAD FAILS
 							//echo '<br />(FB)TO: '.$my_largeimage_withpath.'<br />';//SHOW PATHS WHEN UPLOAD FAILS
 							
@@ -421,7 +423,7 @@ if( notloggedin() ) {
 								
 								// REMOVE previous image
 								if($CMSShared->FileExists($my_image_large) && $my_image_large != $my_largeimage_withpath) unlink($my_image_large);
-								if($CMSShared->FileExists($my_image_highres) && $my_image_highres != $my_highresimage_withpath) unlink($my_image_highres);
+								// if($CMSShared->FileExists($my_image_highres) && $my_image_highres != $my_highresimage_withpath) unlink($my_image_highres);
 								
 								if ($CMSShared->IsImage($UploadFileName)) {// (upload): if 4 ...isimage()
 									//echo '<br />(FB) MAKE THUMBNAILS';
@@ -429,20 +431,20 @@ if( notloggedin() ) {
 									if($CMSShared->FileExists($my_image_primary)) unlink($my_image_primary);
 									
 									//echo '<br/>MAKE THUMB IMAGE:'.$my_largeimage_withpath.'/'.$UploadFileName;
-									$CMSMakeImages->MakeImage($my_largeimage_withpath,$UploadFileName,"thumb");
+									$CMSMakeImages->MakeImage($ParentID,$my_largeimage_withpath,$UploadFileName,"thumb");
 									//if($my_id_xtra == 0){
 										//echo '<br/>MAKE PRIMARY IMAGE:'.$my_largeimage_withpath.'/'.$UploadFileName;
-										$CMSMakeImages->MakeImage($my_largeimage_withpath,$UploadFileName,"primary");
+										$CMSMakeImages->MakeImage($ParentID,$my_largeimage_withpath,$UploadFileName,"primary");
 										
 									//}
 									
 									$tmpDimensions = @getimagesize($my_largeimage_withpath);// get original (ACTUAL) dimensions								
 									if($ThinUpload==false && (filesize($my_largeimage_withpath)>$gp_maxfilesize_large || ($tmpDimensions[0]>$gp_large_width || $tmpDimensions[1]>$gp_large_height))){
 										
-										$CMSMakeImages->MakeImage($my_largeimage_withpath,$UploadFileName,"large");
+										$CMSMakeImages->MakeImage($ParentID,$my_largeimage_withpath,$UploadFileName,"large");
 										
 										// if(gp_enabled("highres")){										
-											$CMSMakeImages->MakeImage($my_largeimage_withpath,$UploadFileName,"highres");
+											// $CMSMakeImages->MakeImage($ParentID,$my_largeimage_withpath,$UploadFileName,"highres");
 										// }
 									}
 								} // (upload): end if 3 ...isimage()
@@ -454,18 +456,18 @@ if( notloggedin() ) {
 								
 								
 								// ORDER POSITIONS
-								if (empty($my_id_xtra) && !$editid) {									
-									$all_query = "SELECT * FROM $db_clientTable_catalogue ORDER by position";
-									$all_result = mysql_query($all_query);					
-									$all_num_rows = mysql_num_rows($all_result);												
+								// if (empty($my_id_xtra) && !$editid) {									
+								// 	$all_query = "SELECT * FROM $db_clientTable_catalogue ORDER by position";
+								// 	$all_result = mysql_query($all_query);					
+								// 	$all_num_rows = mysql_num_rows($all_result);												
 									
-									for($tmpcount = 0;$tmpcount < $all_num_rows;$tmpcount++) {									
-										$all_array 	= mysql_fetch_row($all_result);
-										//echo $tmpcount .' / ' . $all_num_rows .' , ';
-										$position_query = "UPDATE $db_clientTable_catalogue SET position=$tmpcount WHERE id = '".$all_array[0]."'";
-										$position_result = $db->mysql_query_log($position_query);	
-									}
-								}
+								// 	for($tmpcount = 0;$tmpcount < $all_num_rows;$tmpcount++) {									
+								// 		$all_array 	= mysql_fetch_row($all_result);
+								// 		//echo $tmpcount .' / ' . $all_num_rows .' , ';
+								// 		$position_query = "UPDATE $db_clientTable_catalogue SET position=$tmpcount WHERE id = '".$all_array[0]."'";
+								// 		$position_result = $db->mysql_query_log($position_query);	
+								// 	}
+								// }
 								
 								$message_largeimage = 'File successfully uploaded';
 								$panel_largeimage = 'panel_good';		
@@ -487,8 +489,8 @@ if( notloggedin() ) {
 					//////
 					//If name has changed and SEO filename needs regenerating...
 					if($editid && $_POST['GenerateFileName'] && $NameChanged){
-						$oldName = $siteroot.$gp_uploadPath['large']."_test6.jpg";
-						$newName = $siteroot.$gp_uploadPath['large']."_test7.jpg";
+						$oldName = setImgDir($ParentID,'large')."_test6.jpg";
+						$newName = setImgDir($ParentID,'large')."_test7.jpg";
 						$attributes = array('oldName'=>$oldName,'newName'=>$newName);
 						$CMSMakeImages->RenameFile($attributes);
 						//$getAttributes['oldName'],$getAttributes['newName']
@@ -498,7 +500,7 @@ if( notloggedin() ) {
 						
 						$UploadThumb = $_FILES['upload_thumb']['tmp_name'];
 						$UploadFileName = "th_".$tmpName."_".$uid.".".$filetype;
-						$my_CustomThumb_withpath	= $siteroot.$gp_uploadPath['thumbs'].$UploadFileName;
+						$my_CustomThumb_withpath	= setImgDir($ParentID,'thumbs').$UploadFileName;
 						move_uploaded_file($UploadThumb,$my_CustomThumb_withpath);
 						
 						if($CMSShared->FileExists($my_CustomThumb) && $my_CustomThumb != $my_CustomThumb_withpath) unlink($my_CustomThumb);
